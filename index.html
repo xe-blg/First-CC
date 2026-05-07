@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄钟</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="app-title">番茄钟</h1>
+      <div class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="focus">专注</button>
+        <button class="mode-tab" data-mode="shortBreak">短休</button>
+        <button class="mode-tab" data-mode="longBreak">长休</button>
+      </div>
+      <button class="settings-btn" id="settingsBtn" title="设置">⚙</button>
+    </header>
+
+    <main class="main-content">
+      <section class="timer-section">
+        <div class="timer-card">
+          <div class="timer-ring-container">
+            <svg class="timer-ring" viewBox="0 0 200 200">
+              <circle class="ring-bg" cx="100" cy="100" r="88" />
+              <circle class="ring-progress" cx="100" cy="100" r="88" />
+            </svg>
+            <div class="timer-display" id="timerDisplay">
+              <span class="timer-minutes" id="timerMinutes">25</span>
+              <span class="timer-colon">:</span>
+              <span class="timer-seconds" id="timerSeconds">00</span>
+            </div>
+          </div>
+          <p class="pomodoro-counter" id="pomodoroCounter">第 1 个番茄</p>
+          <div class="timer-controls">
+            <button class="btn btn-primary btn-large" id="startBtn">开始专注</button>
+            <button class="btn btn-secondary" id="pauseBtn" disabled>暂停</button>
+            <button class="btn btn-ghost" id="resetBtn">重置</button>
+          </div>
+          <p class="current-task-label" id="currentTaskLabel">当前任务：无</p>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="panel task-panel">
+          <div class="panel-header">
+            <h2>任务列表</h2>
+          </div>
+          <div class="task-input-row">
+            <input type="text" id="taskInput" class="task-input" placeholder="添加一个新任务..." maxlength="100" autocomplete="off">
+            <button class="btn btn-small btn-primary" id="addTaskBtn">添加</button>
+          </div>
+          <ul class="task-list" id="taskList"></ul>
+          <div class="task-empty" id="taskEmpty">暂无任务，添加一个吧</div>
+        </div>
+
+        <div class="panel stats-panel">
+          <div class="panel-header">
+            <h2>统计</h2>
+          </div>
+          <div class="stats-content">
+            <div class="today-stat" id="todayStat">
+              <span class="today-count" id="todayCount">0</span>
+              <span class="today-label">今日番茄</span>
+            </div>
+            <div class="week-chart-container" id="weekChart"></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay hidden" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>设置</h2>
+        <button class="modal-close" id="closeSettings">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="focusDuration">专注时长</label>
+            <span class="range-value" id="focusDurationLabel">25 分钟</span>
+          </div>
+          <input type="range" min="1" max="60" value="25" id="focusDuration" class="range-slider">
+        </div>
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="shortBreakDuration">短休时长</label>
+            <span class="range-value" id="shortBreakDurationLabel">5 分钟</span>
+          </div>
+          <input type="range" min="1" max="30" value="5" id="shortBreakDuration" class="range-slider">
+        </div>
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="longBreakDuration">长休时长</label>
+            <span class="range-value" id="longBreakDurationLabel">15 分钟</span>
+          </div>
+          <input type="range" min="1" max="60" value="15" id="longBreakDuration" class="range-slider">
+        </div>
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="longBreakInterval">长休间隔</label>
+            <span class="range-value" id="longBreakIntervalLabel">4 个番茄</span>
+          </div>
+          <input type="range" min="2" max="8" value="4" id="longBreakInterval" class="range-slider">
+        </div>
+        <div class="setting-divider"></div>
+        <div class="setting-group setting-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoStartBreaks" checked>
+            <span class="checkbox-custom"></span>
+            专注结束后自动开始休息
+          </label>
+        </div>
+        <div class="setting-group setting-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoStartFocus">
+            <span class="checkbox-custom"></span>
+            休息结束后自动开始专注
+          </label>
+        </div>
+        <div class="setting-group setting-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="soundEnabled" checked>
+            <span class="checkbox-custom"></span>
+            启用提示音
+          </label>
+        </div>
+        <div class="setting-group setting-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="notificationsEnabled" checked>
+            <span class="checkbox-custom"></span>
+            启用桌面通知
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="saveSettings">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
