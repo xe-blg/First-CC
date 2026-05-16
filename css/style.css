@@ -315,6 +315,17 @@ ul { list-style: none; }
   border-radius: var(--radius-sm);
 }
 
+/* Encouragement text */
+.encouragement-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-focus);
+  text-align: center;
+  letter-spacing: 4px;
+  opacity: 0.85;
+  transition: opacity var(--transition-normal);
+}
+
 /* Current task label */
 .current-task-label {
   font-size: 13px;
